@@ -1,0 +1,76 @@
+
+package com.claudioliveira.api;
+
+import io.vertx.core.AbstractVerticle;
+import io.vertx.core.Vertx;
+import io.vertx.core.VertxOptions;
+import io.vertx.core.http.HttpHeaders;
+import io.vertx.core.json.JsonArray;
+import io.vertx.core.json.JsonObject;
+import io.vertx.ext.mongo.MongoClient;
+import io.vertx.ext.web.Router;
+import io.vertx.ext.web.handler.BodyHandler;
+
+/**
+ * @author Claudio E. de Oliveira on 27/07/15.
+ */
+public class MagazineAPI extends AbstractVerticle {
+
+    public static void main(String[] args) {
+        Vertx vertx = Vertx.vertx(new VertxOptions());
+        vertx.deployVerticle(new MagazineAPI());
+    }
+
+    @Override
+    public void start() throws Exception {
+
+        final MongoClient mongoClient = MongoClient.createShared(vertx,
+                new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
+        final Router router = Router.router(vertx);
+        router.route().handler(BodyHandler.create());
+
+        router.get("/api/magazines").handler(
+                ctx -> mongoClient.find("magazines", new JsonObject(), lookup -> {
+                    if (lookup.failed()) {
+                        ctx.fail(lookup.cause());
+                        return;
+                    }
+                    final JsonArray json = new JsonArray();
+                    lookup.result().forEach(json::add);
+                    ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+                    ctx.response().end(json.encode());
+                }));
+
+        router.get("/api/magazine/:id").handler(ctx -> mongoClient.findOne("magazines", new JsonObject().put("_id", ctx.request().getParam("id")), new JsonObject(), lookup -> {
+            if (lookup.failed()) {
+                ctx.fail(lookup.cause());
+                return;
+            }
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end(lookup.result().encode());
+
+        }));
+
+        router.post("/api/magazine").handler(
+                ctx -> mongoClient.insert("magazines", ctx.getBodyAsJson(), lookup -> {
+                    if (lookup.failed()) {
+                        ctx.fail(lookup.cause());
+                        return;
+                    }
+                    ctx.response().setStatusCode(201);
+                    ctx.response().end();
+                }));
+
+        router.delete("/magazine/:id").handler(ctx -> mongoClient.removeOne("magazine", new JsonObject().put("_id", ctx.request().getParam("id")), lookup -> {
+            if (lookup.failed()) {
+                ctx.fail(lookup.cause());
+                return;
+            }
+            ctx.response().setStatusCode(204);
+            ctx.response().end();
+        }));
+
+        vertx.createHttpServer().requestHandler(router::accept).listen(9000);
+    }
+
+}
