@@ -9,7 +9,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 
 /**
- * @author Claudio Eduardo de Oliveira (claudioeduardo.deoliveira@sonymobile.com).
+ * @author Claudio Eduardo de Oliveira (claudioed.oliveira@gmail.com).
  */
 public class MagazineManagerServer {
 

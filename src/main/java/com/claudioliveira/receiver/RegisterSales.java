@@ -8,7 +8,7 @@ import io.vertx.ext.mongo.MongoClient;
 
 /**
  * @author Claudio Eduardo de Oliveira
- *         (claudioeduardo.deoliveira@sonymobile.com).
+ *         (claudioed.oliveira@gmail.com).
  */
 public class RegisterSales extends AbstractVerticle {
 

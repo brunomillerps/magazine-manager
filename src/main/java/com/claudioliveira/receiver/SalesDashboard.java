@@ -11,7 +11,7 @@ import java.time.format.DateTimeFormatter;
 
 /**
  * @author Claudio Eduardo de Oliveira
- *         (claudioeduardo.deoliveira@sonymobile.com).
+ *         (claudioed.oliveira@gmail.com).
  */
 public class SalesDashboard extends AbstractVerticle {
 
