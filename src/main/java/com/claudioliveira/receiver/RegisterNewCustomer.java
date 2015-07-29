@@ -23,9 +23,6 @@ public class RegisterNewCustomer extends AbstractVerticle {
         eb.consumer("new-customer", message ->
                 mongoClient.insert("customers", new JsonObject(message
                         .body().toString()).put("creationAt", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))), result -> {
-                    if (result.failed()) {
-                        return;
-                    }
                 }));
     }
 
