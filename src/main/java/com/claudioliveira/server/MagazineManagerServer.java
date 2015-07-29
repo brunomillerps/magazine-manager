@@ -2,10 +2,7 @@ package com.claudioliveira.server;
 
 import com.claudioliveira.api.*;
 
-import com.claudioliveira.receiver.RegisterNewCustomer;
-import com.claudioliveira.receiver.RegisterNewDelivery;
-import com.claudioliveira.receiver.RegisterSales;
-import com.claudioliveira.receiver.SalesDashboard;
+import com.claudioliveira.receiver.*;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 
@@ -25,6 +22,8 @@ public class MagazineManagerServer {
         vertx.deployVerticle(new RegisterSales());
         vertx.deployVerticle(new SalesDashboard());
         vertx.deployVerticle(new RegisterNewDelivery());
+        vertx.deployVerticle(new RegisterMagazinesByDelivery());
+        vertx.deployVerticle(new UpdateMagazineByDelivery());
     }
 
 }

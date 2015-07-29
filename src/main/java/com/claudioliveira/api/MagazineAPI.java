@@ -48,29 +48,16 @@ public class MagazineAPI extends AbstractVerticle {
             }
             ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end(lookup.result().encode());
-
         }));
 
-        router.post("/api/magazine").handler(
-                ctx -> mongoClient.insert("magazines", ctx.getBodyAsJson(), lookup -> {
-                    if (lookup.failed()) {
-                        ctx.fail(lookup.cause());
-                        return;
-                    }
-                    ctx.response().setStatusCode(201);
-                    ctx.response().end();
-                }));
-
-        router.delete("/magazine/:id").handler(ctx -> mongoClient.removeOne("magazine", new JsonObject().put("_id", ctx.request().getParam("id")), lookup -> {
-            if (lookup.failed()) {
-                ctx.fail(lookup.cause());
-                return;
-            }
-            ctx.response().setStatusCode(204);
+        router.put("/api/magazine/:id").handler(ctx -> {
+            vertx.eventBus().publish("update-magazine-by-delivery", ctx.getBodyAsJson().put("id",ctx.request().getParam("id")));
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end();
-        }));
+        });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(9000);
+
     }
 
 }

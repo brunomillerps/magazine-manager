@@ -41,7 +41,11 @@ public class DeliveryAPI extends AbstractVerticle {
                     ctx.response().end(json.encode());
                 }));
 
-        router.post("/api/delivery").handler(ctx -> vertx.eventBus().publish("new-delivery",ctx.getBodyAsJson()));
+        router.post("/api/delivery").handler(ctx -> {
+            vertx.eventBus().publish("new-delivery", ctx.getBodyAsJson());
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end();
+        });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(9002);
     }
