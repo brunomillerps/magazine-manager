@@ -1,10 +1,13 @@
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.UUID;
 
 /**
@@ -19,7 +22,10 @@ public class RegisterNewCustomer extends AbstractVerticle {
         EventBus eb = vertx.eventBus();
         eb.consumer("new-customer", message ->
                 mongoClient.insert("customers", new JsonObject(message
-                        .body().toString()), result -> {
+                        .body().toString()).put("creationAt", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))), result -> {
+                    if (result.failed()) {
+                        return;
+                    }
                 }));
     }
 

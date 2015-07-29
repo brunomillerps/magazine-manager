@@ -41,7 +41,11 @@ public class CustomerAPI extends AbstractVerticle {
                     ctx.response().end(json.encode());
                 }));
 
-        router.post("/api/customer").handler(ctx -> vertx.eventBus().publish("new-customer",ctx.getBodyAsJson()));
+        router.post("/api/customer").handler(ctx -> {
+            vertx.eventBus().publish("new-customer", ctx.getBodyAsJson());
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end();
+        });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(9004);
     }

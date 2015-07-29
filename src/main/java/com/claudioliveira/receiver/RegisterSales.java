@@ -1,10 +1,13 @@
 
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
 import io.vertx.core.json.JsonObject;
 import io.vertx.ext.mongo.MongoClient;
+
+import java.time.LocalDateTime;
 
 /**
  * @author Claudio Eduardo de Oliveira
@@ -18,7 +21,7 @@ public class RegisterSales extends AbstractVerticle {
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
         eb.consumer("new-sale", message -> mongoClient.insert("sales", new JsonObject(message
-                .body().toString()), result -> {
+                .body().toString()).put("creationAt", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))), result -> {
         }));
     }
 
