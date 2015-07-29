@@ -12,7 +12,7 @@ import io.vertx.ext.web.Router;
 import io.vertx.ext.web.handler.BodyHandler;
 
 /**
- * @author Claudio E. de Oliveira on 27/07/15.
+ * @author Claudio E. de Oliveira (claudioed.oliveira@gmail.com).
  */
 public class MagazineAPI extends AbstractVerticle {
 

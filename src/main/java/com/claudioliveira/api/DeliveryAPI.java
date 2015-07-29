@@ -14,11 +14,11 @@ import io.vertx.ext.web.handler.BodyHandler;
 /**
  * @author Claudio E. de Oliveira (claudioed.oliveira@gmail.com).
  */
-public class SalesAPI extends AbstractVerticle {
+public class DeliveryAPI extends AbstractVerticle {
 
     public static void main(String[] args) {
         Vertx vertx = Vertx.vertx(new VertxOptions());
-        vertx.deployVerticle(new SalesAPI());
+        vertx.deployVerticle(new DeliveryAPI());
     }
 
     @Override
@@ -29,8 +29,8 @@ public class SalesAPI extends AbstractVerticle {
         final Router router = Router.router(vertx);
         router.route().handler(BodyHandler.create());
 
-        router.get("/api/sales").handler(
-                ctx -> mongoClient.find("sales", new JsonObject(), lookup -> {
+        router.get("/api/deliveries").handler(
+                ctx -> mongoClient.find("deliveries", new JsonObject(), lookup -> {
                     if (lookup.failed()) {
                         ctx.fail(lookup.cause());
                         return;
@@ -41,9 +41,9 @@ public class SalesAPI extends AbstractVerticle {
                     ctx.response().end(json.encode());
                 }));
 
-        router.post("/api/sale").handler(ctx -> vertx.eventBus().publish("new-sale",ctx.getBodyAsJson()));
+        router.post("/api/delivery").handler(ctx -> vertx.eventBus().publish("new-delivery",ctx.getBodyAsJson()));
 
-        vertx.createHttpServer().requestHandler(router::accept).listen(9001);
+        vertx.createHttpServer().requestHandler(router::accept).listen(9002);
     }
 
 }
