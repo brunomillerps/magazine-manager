@@ -57,6 +57,17 @@ public class MagazineAPI extends AbstractVerticle {
             ctx.response().end();
         });
 
+        router.get("/api/magazine?barcode=:barcode").handler(ctx -> mongoClient.find("magazines", new JsonObject().put("barcode", ctx.request().getParam("barcode")), lookup -> {
+            if (lookup.failed()) {
+                ctx.fail(lookup.cause());
+                return;
+            }
+            final JsonArray json = new JsonArray();
+            lookup.result().forEach(json::add);
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end(json.encode());
+        }));
+
         vertx.createHttpServer().requestHandler(router::accept).listen(9000);
 
     }

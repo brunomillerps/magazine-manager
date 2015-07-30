@@ -23,10 +23,10 @@ public class RegisterMagazinesByDelivery extends AbstractVerticle {
         final MongoClient mongoClient = MongoClient.createShared(vertx,
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
-        eb.consumer(DomainEvent.SUCCESS_DELIVERY.event(), message -> mongoClient.findOne("deliveries", new JsonObject().put("_id", message.body().toString()), new JsonObject(), handler -> {
+        eb.consumer(DomainEvent.SUCCESS_DELIVERY.event(), message -> mongoClient.findOne("deliveries", new JsonObject().put("_id", new JsonObject(message.body().toString()).getString("deliveryId")), new JsonObject(), handler -> {
             if (handler.succeeded()) {
                 JsonArray elements = handler.result().getJsonArray("elements");
-                elements.forEach(magazine -> mongoClient.insert("magazines", new JsonObject(magazine.toString()).put("available", Boolean.TRUE).put("delivery", message.body().toString()), result -> {
+                elements.forEach(magazine -> mongoClient.insert("magazines", new JsonObject(magazine.toString()).put("available", Boolean.TRUE).put("delivery", new JsonObject(message.body().toString()).getString("deliveryId")), result -> {
                     if (result.failed()) {
                         LOGGER.error("Error on save magazines by delivery!!!");
                     } else {
