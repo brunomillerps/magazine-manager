@@ -17,7 +17,9 @@ public enum DomainEvent {
     
     NEW_SALE,
     
-    FILL_MAGAZINE_PRICE_IN_HISTORY;
+    FILL_MAGAZINE_PRICE_IN_HISTORY,
+    
+    NOTIFY_CUSTOMER_ARRIVE_NEW_MAGAZINE;
     
     public String event(){
         return this.name();

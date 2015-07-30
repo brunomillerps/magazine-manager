@@ -32,6 +32,8 @@ public class RegisterMagazinesByDelivery extends AbstractVerticle {
                     } else {
                         eb.publish(DomainEvent.FILL_MAGAZINE_PRICE_IN_HISTORY.event(),
                                 new JsonObject().put("magazine", new JsonObject(magazine.toString())).put("deliveryTimestamp", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))));
+                        eb.publish(DomainEvent.NOTIFY_CUSTOMER_ARRIVE_NEW_MAGAZINE.event(),
+                                new JsonObject().put("magazine", new JsonObject(magazine.toString())).put("deliveryTimestamp", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))));
                     }
                 }));
             } else {
