@@ -51,8 +51,8 @@ public class MagazineAPI extends AbstractVerticle {
             ctx.response().end(lookup.result().encode());
         }));
 
-        router.put("/api/magazine/:id").handler(ctx -> {
-            vertx.eventBus().publish(DomainEvent.UPDATE_MAGAZINE_ON_DELIVERY.event(), ctx.getBodyAsJson().put("id",ctx.request().getParam("id")));
+        router.put("/api/delivery/:deliveryId/magazine/:barcode").handler(ctx -> {
+            vertx.eventBus().publish(DomainEvent.UPDATE_MAGAZINE_ON_DELIVERY.event(), ctx.getBodyAsJson().put("deliveryId",ctx.request().getParam("deliveryId")).put("barcode",ctx.request().getParam("barcode")));
             ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end();
         });

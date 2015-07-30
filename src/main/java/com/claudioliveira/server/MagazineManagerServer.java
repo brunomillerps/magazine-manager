@@ -23,7 +23,7 @@ public class MagazineManagerServer {
         vertx.deployVerticle(new SalesDashboard());
         vertx.deployVerticle(new RegisterNewDelivery());
         vertx.deployVerticle(new RegisterMagazinesByDelivery());
-        vertx.deployVerticle(new UpdateMagazineByDelivery());
+        vertx.deployVerticle(new RegisterInfoMagazine());
     }
 
 }
