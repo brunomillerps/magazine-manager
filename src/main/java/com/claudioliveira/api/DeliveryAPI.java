@@ -48,6 +48,13 @@ public class DeliveryAPI extends AbstractVerticle {
             ctx.response().end();
         });
 
+        router.put("/api/delivery/:deliveryId/magazine/:barcode").handler(ctx -> {
+            vertx.eventBus().publish(DomainEvent.UPDATE_MAGAZINE_ON_DELIVERY.event(), ctx.getBodyAsJson().put("deliveryId",ctx.request().getParam("deliveryId")).put("barcode",ctx.request().getParam("barcode")));
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end();
+        });
+
+
         vertx.createHttpServer().requestHandler(router::accept).listen(9002);
     }
 
