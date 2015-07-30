@@ -1,6 +1,7 @@
 
 package com.claudioliveira.api;
 
+import com.claudioliveira.domain.DomainEvent;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -51,7 +52,7 @@ public class MagazineAPI extends AbstractVerticle {
         }));
 
         router.put("/api/magazine/:id").handler(ctx -> {
-            vertx.eventBus().publish("update-magazine-by-delivery", ctx.getBodyAsJson().put("id",ctx.request().getParam("id")));
+            vertx.eventBus().publish(DomainEvent.UPDATE_MAGAZINE_ON_DELIVERY.event(), ctx.getBodyAsJson().put("id",ctx.request().getParam("id")));
             ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end();
         });

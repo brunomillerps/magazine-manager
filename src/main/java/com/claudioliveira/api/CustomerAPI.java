@@ -1,6 +1,7 @@
 
 package com.claudioliveira.api;
 
+import com.claudioliveira.domain.DomainEvent;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -42,7 +43,7 @@ public class CustomerAPI extends AbstractVerticle {
                 }));
 
         router.post("/api/customer").handler(ctx -> {
-            vertx.eventBus().publish("new-customer", ctx.getBodyAsJson());
+            vertx.eventBus().publish(DomainEvent.NEW_CUSTOMER.event(), ctx.getBodyAsJson());
             ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end();
         });

@@ -1,6 +1,7 @@
 
 package com.claudioliveira.api;
 
+import com.claudioliveira.domain.DomainEvent;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
@@ -41,7 +42,11 @@ public class GatheringAPI extends AbstractVerticle {
                     ctx.response().end(json.encode());
                 }));
 
-        router.post("/api/delivery").handler(ctx -> vertx.eventBus().publish("new-gatherings",ctx.getBodyAsJson()));
+        router.post("/api/delivery").handler(ctx -> {
+            vertx.eventBus().publish(DomainEvent.NEW_GATHERING.event(), ctx.getBodyAsJson());
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end();
+        });
 
         vertx.createHttpServer().requestHandler(router::accept).listen(9003);
     }

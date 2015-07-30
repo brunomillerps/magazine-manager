@@ -1,6 +1,7 @@
 
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
 import io.vertx.core.eventbus.EventBus;
@@ -21,7 +22,7 @@ public class RegisterNewDelivery extends AbstractVerticle {
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
         eb.consumer(
-                "new-delivery",
+                DomainEvent.NEW_DELIVERY.event(),
                 message -> {
                     String code = UUID.randomUUID().toString();
                     mongoClient.insert(
@@ -33,7 +34,7 @@ public class RegisterNewDelivery extends AbstractVerticle {
                                             DateTimeMongoFormat.format(LocalDateTime.now()))),
                             result -> {
                                 if (result.succeeded()) {
-                                    eb.publish("new-delivery-success",
+                                    eb.publish(DomainEvent.SUCCESS_DELIVERY.event(),
                                             new JsonObject().put("deliveryId", result.result()));
                                 }
                             });
