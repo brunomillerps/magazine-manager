@@ -7,6 +7,9 @@ import io.vertx.core.Vertx;
 import io.vertx.core.VertxOptions;
 
 /**
+ * 
+ * The startup server of Magazine Manager.
+ *  
  * @author Claudio Eduardo de Oliveira (claudioed.oliveira@gmail.com).
  */
 public class MagazineManagerServer {
