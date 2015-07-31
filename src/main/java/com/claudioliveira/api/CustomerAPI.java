@@ -49,11 +49,13 @@ public class CustomerAPI extends AbstractVerticle {
         });
 
         router.put("/api/customer/:customerId/magazine/:barcode").handler(ctx -> {
-            vertx.eventBus().publish(DomainEvent.NEW_FAVORITE_MAGAZINE.event(), ctx.getBodyAsJson());
+            vertx.eventBus().publish(DomainEvent.NEW_FAVORITE_MAGAZINE.event(), new JsonObject()
+                    .put("customerId", ctx.request().getParam("customerId"))
+                    .put("barcode", ctx.request().getParam("barcode")));
             ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
             ctx.response().end();
         });
-        
+
         vertx.createHttpServer().requestHandler(router::accept).listen(9004);
     }
 

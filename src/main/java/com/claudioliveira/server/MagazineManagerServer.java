@@ -24,6 +24,7 @@ public class MagazineManagerServer {
         vertx.deployVerticle(new RegisterNewDelivery());
         vertx.deployVerticle(new RegisterMagazinesByDelivery());
         vertx.deployVerticle(new RegisterInfoMagazine());
+        vertx.deployVerticle(new FavoriteMagazine());
     }
 
 }
