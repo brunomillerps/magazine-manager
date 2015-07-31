@@ -13,6 +13,8 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 /**
+ * This handler is responsible to register deliveries in database.
+ *
  * @author Claudio E. de Oliveira (claudioed.oliveira@gmail.com).
  */
 public class RegisterNewDelivery extends AbstractVerticle {
@@ -26,13 +28,13 @@ public class RegisterNewDelivery extends AbstractVerticle {
                 DomainEvent.NEW_DELIVERY.event(),
                 message -> {
                     String code = UUID.randomUUID().toString();
+                    JsonObject jsonDelivery = new JsonObject(message
+                            .body().toString()).put("code", code).put(
+                            "creationAt",
+                            new JsonObject().put("$date",
+                                    DateTimeMongoFormat.format(LocalDateTime.now())));
                     mongoClient.insert(
-                            DomainCollection.DELIVERIES.collection(),
-                            new JsonObject(message
-                                    .body().toString()).put("code", code).put(
-                                    "creationAt",
-                                    new JsonObject().put("$date",
-                                            DateTimeMongoFormat.format(LocalDateTime.now()))),
+                            DomainCollection.DELIVERIES.collection(),jsonDelivery,
                             result -> {
                                 if (result.succeeded()) {
                                     eb.publish(DomainEvent.SUCCESS_DELIVERY.event(),

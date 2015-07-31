@@ -41,7 +41,8 @@ public class RegisterMagazinesByDelivery extends AbstractVerticle {
                                 .put("withPrice", Boolean.FALSE)
                                 .put("plainBarcode", plainBarcode.plainBarcode())
                                 .put("edition", plainBarcode.edition())
-                                .put("barcode", plainBarcode.barcode());
+                                .put("barcode", plainBarcode.barcode())
+                                .put("deliveryAt",new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now())));
                         mongoClient.insert(DomainCollection.MAGAZINES.collection(), jsonObject, result -> {
                             if (result.failed()) {
                                 LOGGER.error("Error on save magazines by delivery!!!");
