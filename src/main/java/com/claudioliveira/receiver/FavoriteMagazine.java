@@ -1,5 +1,6 @@
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainCollection;
 import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
@@ -26,7 +27,7 @@ public class FavoriteMagazine extends AbstractVerticle {
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
         eb.consumer(DomainEvent.NEW_FAVORITE_MAGAZINE.event(), message -> {
-            mongoClient.findOne("customers", new JsonObject().put("_id", new JsonObject(message.body().toString()).getString("customerId")), new JsonObject(), handler -> {
+            mongoClient.findOne(DomainCollection.CUSTOMERS.collection(), new JsonObject().put("_id", new JsonObject(message.body().toString()).getString("customerId")), new JsonObject(), handler -> {
                 if (handler.succeeded()) {
                     JsonObject customer = handler.result();
                     mongoClient.findOne("magazines", new JsonObject().put("barcode", new JsonObject(message.body().toString()).getString("barcode")), new JsonObject(), handlerMagazine -> {

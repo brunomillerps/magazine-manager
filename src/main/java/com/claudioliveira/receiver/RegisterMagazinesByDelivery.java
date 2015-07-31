@@ -1,5 +1,6 @@
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainCollection;
 import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.domain.PlainBarcode;
 import com.claudioliveira.infra.DateTimeMongoFormat;
@@ -28,7 +29,7 @@ public class RegisterMagazinesByDelivery extends AbstractVerticle {
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
         eb.consumer(DomainEvent.SUCCESS_DELIVERY.event(), message -> {
-            mongoClient.findOne("deliveries", new JsonObject().put("_id", new JsonObject(message.body().toString()).getString("deliveryId")), new JsonObject(), handler -> {
+            mongoClient.findOne(DomainCollection.DELIVERIES.collection(), new JsonObject().put("_id", new JsonObject(message.body().toString()).getString("deliveryId")), new JsonObject(), handler -> {
                 if (handler.succeeded()) {
                     JsonArray elements = handler.result().getJsonArray("elements");
                     elements.forEach(magazine ->
@@ -41,7 +42,7 @@ public class RegisterMagazinesByDelivery extends AbstractVerticle {
                                 .put("plainBarcode", plainBarcode.plainBarcode())
                                 .put("edition", plainBarcode.edition())
                                 .put("barcode", plainBarcode.barcode());
-                        mongoClient.insert("magazines", jsonObject, result -> {
+                        mongoClient.insert(DomainCollection.MAGAZINES.collection(), jsonObject, result -> {
                             if (result.failed()) {
                                 LOGGER.error("Error on save magazines by delivery!!!");
                             } else {

@@ -1,6 +1,7 @@
 
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainCollection;
 import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
@@ -26,7 +27,7 @@ public class RegisterNewDelivery extends AbstractVerticle {
                 message -> {
                     String code = UUID.randomUUID().toString();
                     mongoClient.insert(
-                            "deliveries",
+                            DomainCollection.DELIVERIES.collection(),
                             new JsonObject(message
                                     .body().toString()).put("code", code).put(
                                     "creationAt",

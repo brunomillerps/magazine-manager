@@ -1,5 +1,6 @@
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainCollection;
 import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.infra.DateTimeMongoFormat;
 import io.vertx.core.AbstractVerticle;
@@ -22,7 +23,7 @@ public class RegisterNewCustomer extends AbstractVerticle {
                 new JsonObject().put("magazine-manager", "magazine-manager"), "magazine-manager");
         EventBus eb = vertx.eventBus();
         eb.consumer(DomainEvent.NEW_CUSTOMER.event(), message ->
-                mongoClient.insert("customers", new JsonObject(message
+                mongoClient.insert(DomainCollection.CUSTOMERS.collection(), new JsonObject(message
                         .body().toString()).put("creationAt", new JsonObject().put("$date", DateTimeMongoFormat.format(LocalDateTime.now()))), result -> {
                 }));
     }

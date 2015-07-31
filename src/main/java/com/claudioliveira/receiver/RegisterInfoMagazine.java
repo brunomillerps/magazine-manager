@@ -1,5 +1,6 @@
 package com.claudioliveira.receiver;
 
+import com.claudioliveira.domain.DomainCollection;
 import com.claudioliveira.domain.DomainEvent;
 import com.claudioliveira.domain.PlainBarcode;
 import io.vertx.core.AbstractVerticle;
@@ -31,7 +32,7 @@ public class RegisterInfoMagazine extends AbstractVerticle {
                     .put("price", jsonMessage.getDouble("price"))
                     .put("name", jsonMessage.getString("name"))
                     .put("withPrice", Boolean.TRUE));
-            mongoClient.update("magazines", query, update, handler -> {
+            mongoClient.update(DomainCollection.MAGAZINES.collection(), query, update, handler -> {
                 if (handler.succeeded()) {
                     LOGGER.info("Magazine updated with success!!!");
                 } else {
