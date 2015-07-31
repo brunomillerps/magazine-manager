@@ -26,7 +26,7 @@ public class RegisterInfoMagazine extends AbstractVerticle {
         eb.consumer(DomainEvent.UPDATE_MAGAZINE_ON_DELIVERY.event(), message -> {
             JsonObject jsonMessage = new JsonObject(message.body().toString());
             PlainBarcode plainBarcode = new PlainBarcode(jsonMessage.getString("barcode"));
-            JsonObject query = new JsonObject().put("delivery", jsonMessage.getString("deliveryId")).put("barcode", plainBarcode.barcode());
+            JsonObject query = new JsonObject().put("delivery", jsonMessage.getString("deliveryId")).put("plainBarcode", plainBarcode.plainBarcode());
             JsonObject update = new JsonObject().put("$set", new JsonObject()
                     .put("price", jsonMessage.getDouble("price"))
                     .put("name", jsonMessage.getString("name"))
