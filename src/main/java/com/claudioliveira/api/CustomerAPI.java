@@ -48,6 +48,12 @@ public class CustomerAPI extends AbstractVerticle {
             ctx.response().end();
         });
 
+        router.put("/api/customer/:customerId/magazine/:barcode").handler(ctx -> {
+            vertx.eventBus().publish(DomainEvent.NEW_FAVORITE_MAGAZINE.event(), ctx.getBodyAsJson());
+            ctx.response().putHeader(HttpHeaders.CONTENT_TYPE, "application/json");
+            ctx.response().end();
+        });
+        
         vertx.createHttpServer().requestHandler(router::accept).listen(9004);
     }
 

@@ -54,7 +54,6 @@ public class DeliveryAPI extends AbstractVerticle {
             ctx.response().end();
         });
 
-
         vertx.createHttpServer().requestHandler(router::accept).listen(9002);
     }
 
