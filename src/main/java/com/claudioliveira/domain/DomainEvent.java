@@ -1,7 +1,9 @@
 package com.claudioliveira.domain;
 
 /**
- * @author Claudio E. de Oliveira (claudioed.oliveira@gmail.com).
+ * Constants for system events.
+ * 
+ *  @author Claudio E. de Oliveira (claudioed.oliveira@gmail.com).
  */
 public enum DomainEvent {
     
@@ -20,6 +22,10 @@ public enum DomainEvent {
     NEW_SALE,
     
     FILL_MAGAZINE_PRICE_IN_HISTORY,
+    
+    UPDATE_MAGAZINE_STOCK,
+    
+    UPDATE_DELIVERY_STOCK,
     
     NOTIFY_CUSTOMER_ARRIVE_NEW_MAGAZINE;
     
